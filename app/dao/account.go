@@ -41,11 +41,25 @@ func (a *account) FindByUsername(ctx context.Context, username string) (*object.
 }
 
 func (a *account) Create(ctx context.Context, tx *sqlx.Tx, acc *object.Account) error {
-	_, err := a.db.Exec("insert into account (username, password_hash, display_name, avatar, header, note, create_at) values (?, ?, ?, ?, ?, ?, ?)",
+	_, err := tx.Exec("insert into account (username, password_hash, display_name, avatar, header, note, create_at) values (?, ?, ?, ?, ?, ?, ?)",
 		acc.Username, acc.PasswordHash, acc.DisplayName, acc.Avatar, acc.Header, acc.Note, acc.CreateAt)
 	if err != nil {
 		return fmt.Errorf("failed to insert account: %w", err)
 	}
 
 	return nil
+}
+
+func (s *status) FindAccountByAccountID(ctx context.Context, accountID int) (*object.Account, error) {
+	entity := new(object.Account)
+	err := s.db.QueryRowxContext(ctx, "select * from account where id = ?", accountID).StructScan(entity)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+
+		return nil, fmt.Errorf("failed to find account from db: %w", err)
+	}
+
+	return entity, nil
 }

@@ -32,8 +32,8 @@ tags:
     externalDocs:
       description: Find out more
       url: http://example.com
-  - name: timelines
-    description: Everything about Timelines
+  - name: timeline
+    description: Everything about Timeline
     externalDocs:
       description: Find out more
       url: http://example.com
@@ -261,12 +261,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: max_id
-          in: query
-          description: Get a list of followings with ID less than this value
-          required: false
-          schema:
-            type: integer
         - name: since_id
           in: query
           description: Get a list of followings with ID greater than this value
@@ -436,44 +430,37 @@ paths:
             application/json:
               schema:
                 type: object
-  /timelines/home:
+  /timeline/home:
     get:
       security:
         - Auth: []
       tags:
-        - timelines
+        - timeline
       summary: Retrieving a timeline
       description: ""
-      operationId: findHomeTimelines
+      operationId: findHomeTimeline
       parameters:
         - &a1
           name: only_media
           in: query
           description:
             Only return statuses that have media attachments (public and tag
-            timelines only)
+            timeline only)
           required: false
           schema:
             type: boolean
             example: false
-        - &a2
-          name: max_id
-          in: query
-          description: Get a list of followings with ID less than this value
-          required: false
-          schema:
-            type: integer
         - &a3
           name: since_id
           in: query
-          description: Get a list of followings with ID greater than this value
+          description: Get a list with ID greater than this value
           required: false
           schema:
             type: integer
         - &a4
           name: limit
           in: query
-          description: Maximum number of followings to get (Default 40, Max 80)
+          description: Maximum number to get (Default 40, Max 80)
           required: false
           schema:
             type: integer
@@ -486,18 +473,27 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Status"
-  /timelines/public:
+  /timeline/public:
     get:
       tags:
-        - timelines
+        - timeline
       summary: Retrieving a timeline
       description: ""
-      operationId: findPublicTimelines
+      operationId: findPublicTimeline
       parameters:
         - *a1
-        - *a2
-        - *a3
-        - *a4
+        - name: since_id
+          in: query
+          description: Get a list with ID greater than this value
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Maximum number to get (Default 40, Max 80)
+          required: false
+          schema:
+            type: integer
       responses: *a5
 externalDocs:
   description: Find out more about Swagger

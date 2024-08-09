@@ -14,3 +14,4 @@ type Account interface {
 	// TODO: Add Other APIs
 	Create(ctx context.Context, tx *sqlx.Tx, acc *object.Account) error
 }
+
