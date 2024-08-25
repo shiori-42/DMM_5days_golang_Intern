@@ -5,7 +5,8 @@ import (
 	"yatter-backend-go/app/domain/object"
 )
 
-var ContextKey = new(struct{})
+type myKey struct{}
+var ContextKey = myKey{}
 
 // Read Account data from authorized request
 func AccountOf(ctx context.Context) *object.Account {

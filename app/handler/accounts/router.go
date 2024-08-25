@@ -9,17 +9,18 @@ import (
 
 // Implementation of handler
 type handler struct {
-	accountUsecase usecase.Account
+	accountUsecase usecase.AccountUsecase
 }
 
 // Create Handler for `/v1/accounts/`
-func NewRouter(u usecase.Account) http.Handler {
+func NewRouter(u usecase.AccountUsecase) http.Handler {
 	r := chi.NewRouter()
 
 	h := &handler{
 		accountUsecase: u,
 	}
 	r.Post("/", h.Create)
+	r.Get("/{username}", h.GetUser)
 
 	return r
 }
